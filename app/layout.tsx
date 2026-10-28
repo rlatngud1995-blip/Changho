@@ -1,5 +1,6 @@
 
 import type { Metadata, Viewport } from "next";
+import SiteHeader from "../components/SiteHeader";
 import "./globals.css";
 
 const SITE_URL = "https://geujipwindow.com";
@@ -62,7 +63,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ko">
-      <body>{children}</body>
+      <body>
+        <SiteHeader />
+        {children}
+      </body>
     </html>
   );
 }
