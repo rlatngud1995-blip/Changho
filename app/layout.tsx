@@ -50,13 +50,6 @@ export const metadata: Metadata = {
     ],
   },
 
-  verification: {
-    other: {
-      "naver-site-verification":
-        "8654af37eb2e0695402a7c2ad07d870f0bb742e",
-    },
-  },
-
   robots: {
     index: true,
     follow: true,
@@ -76,6 +69,13 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ko">
+      <head>
+        <meta
+          name="naver-site-verification"
+          content="8654af37eb2e0695402a7c2ad07d8700f0bb742e"
+        />
+      </head>
+
       <body>
         <SiteHeader />
         {children}
