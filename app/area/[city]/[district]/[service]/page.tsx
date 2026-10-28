@@ -7,8 +7,8 @@ import {
   ArrowRight,
   ArrowUpRight,
   Phone,
-  CheckCircle2,
   MapPin,
+  CheckCircle2,
 } from "lucide-react";
 
 const SITE = "https://geujipwindow.com";
@@ -66,9 +66,21 @@ const services = {
   apartment: {
     name: "아파트 샷시 교체·설치",
     shortName: "아파트 샷시",
-    image: "/IMG_1939.jpeg",
     description:
-      "아파트 베란다 샷시, 거실창, 방창 및 이중창 교체 상담",
+      "아파트 베란다, 거실창, 방창, 이중창 등 노후 창호 교체와 설치 안내",
+    hero: "/IMG_1939.jpeg",
+    gallery: [
+      {
+        src: "/IMG_1939.jpeg",
+        alt: "아파트 베란다 샷시 교체 후 참고 사진",
+        caption: "아파트 베란다 창호",
+      },
+      {
+        src: "/IMG_1941.jpeg",
+        alt: "아파트 거실 샷시 교체 후 참고 사진",
+        caption: "아파트 거실 창호",
+      },
+    ],
     items: [
       "아파트 베란다 샷시 교체",
       "거실창 및 방창 교체",
@@ -79,11 +91,23 @@ const services = {
   house: {
     name: "단독주택 샷시 교체·설치",
     shortName: "단독주택 샷시",
-    image: "/IMG_1944.jpeg",
     description:
-      "단독주택과 전원주택의 창호 교체 및 설치 상담",
+      "단독주택과 전원주택의 창호 교체, 창문 설치 및 노후 샷시 개선 안내",
+    hero: "/IMG_1944.jpeg",
+    gallery: [
+      {
+        src: "/IMG_1944.jpeg",
+        alt: "창호 설치 상태 참고 사진",
+        caption: "창호 설치 참고",
+      },
+      {
+        src: "/IMG_1943.jpeg",
+        alt: "창문 프레임 및 유리 시공 참고 사진",
+        caption: "창문 구조 참고",
+      },
+    ],
     items: [
-      "단독주택 창호 교체",
+      "단독주택 전체 창호 교체",
       "전원주택 샷시 설치",
       "노후주택 창문 교체",
       "거실창 및 방창 교체",
@@ -92,9 +116,21 @@ const services = {
   villa: {
     name: "빌라 샷시 교체·설치",
     shortName: "빌라 샷시",
-    image: "/IMG_1943.jpeg",
     description:
-      "빌라와 다세대주택의 노후 창호 및 베란다 샷시 교체 상담",
+      "빌라와 다세대주택의 베란다 샷시, 거실창, 방창 교체 및 설치 안내",
+    hero: "/IMG_1943.jpeg",
+    gallery: [
+      {
+        src: "/IMG_1943.jpeg",
+        alt: "창호 프레임 설치 참고 사진",
+        caption: "창호 프레임 참고",
+      },
+      {
+        src: "/IMG_1944.jpeg",
+        alt: "미닫이 창호 설치 참고 사진",
+        caption: "미닫이 창호 참고",
+      },
+    ],
     items: [
       "빌라 베란다 샷시 교체",
       "다세대주택 창호 교체",
@@ -114,43 +150,37 @@ type PageParams = {
 };
 
 function getPageData(params: PageParams) {
-  const { city, district, service } = params;
+  if (!(params.city in regions)) return null;
+  if (!(params.service in services)) return null;
 
-  if (!(city in regions)) return null;
-  if (!(service in services)) return null;
-
-  const cityKey = city as CityKey;
+  const cityKey = params.city as CityKey;
   const cityData = regions[cityKey];
 
   const districts: Record<string, string> =
     cityData.districts;
 
-  const districtName = districts[district];
+  const districtName = districts[params.district];
 
   if (!districtName) return null;
 
+  const serviceKey = params.service as ServiceKey;
+
   return {
-    cityKey,
     cityData,
     districtName,
-    serviceKey: service as ServiceKey,
-    serviceData: services[service as ServiceKey],
+    serviceData: services[serviceKey],
   };
 }
 
 export function generateStaticParams() {
-  const params: PageParams[] = [];
+  const result: PageParams[] = [];
 
   for (const city of Object.keys(regions) as CityKey[]) {
-    const cityData = regions[city];
-
     for (const district of Object.keys(
-      cityData.districts
+      regions[city].districts
     )) {
-      for (const service of Object.keys(
-        services
-      )) {
-        params.push({
+      for (const service of Object.keys(services)) {
+        result.push({
           city,
           district,
           service,
@@ -159,7 +189,7 @@ export function generateStaticParams() {
     }
   }
 
-  return params;
+  return result;
 }
 
 export function generateMetadata({
@@ -172,38 +202,30 @@ export function generateMetadata({
   if (!data) {
     return {
       title: "페이지를 찾을 수 없습니다",
-      robots: {
-        index: false,
-        follow: false,
-      },
+      robots: { index: false, follow: false },
     };
   }
 
   const { cityData, districtName, serviceData } = data;
-
   const location = `${cityData.name} ${districtName}`;
-
   const title = `${location} ${serviceData.name}`;
+  const url =
+    `${SITE}/area/${params.city}/` +
+    `${params.district}/${params.service}`;
 
   const description =
     `${location} ${serviceData.name} 안내. ` +
     `${serviceData.description}. ` +
-    `창호 규격, 현장 실측, 교체 범위 및 견적 상담은 ` +
-    `그집창호 010-8176-3350으로 문의하세요.`;
-
-  const url =
-    `${SITE}/area/${params.city}/` +
-    `${params.district}/${params.service}`;
+    `현장 실측, 창호 규격, 시공 범위와 견적을 ` +
+    `그집창호에서 상담하세요. 전화 ${PHONE}.`;
 
   return {
     title,
     description,
     keywords: [
-      `${location} 샷시`,
       `${location} 샷시교체`,
       `${location} 창호교체`,
       `${location} ${serviceData.shortName}`,
-      serviceData.name,
       "그집창호",
     ],
     alternates: {
@@ -218,8 +240,8 @@ export function generateMetadata({
       url,
       images: [
         {
-          url: serviceData.image,
-          alt: `${serviceData.name} 참고 사진`,
+          url: serviceData.hero,
+          alt: `${serviceData.shortName} 참고 이미지`,
         },
       ],
     },
@@ -230,6 +252,30 @@ export function generateMetadata({
   };
 }
 
+const beforeAfter = [
+  {
+    title: "아파트 베란다 샷시 교체",
+    before: "/IMG_1938.jpeg",
+    after: "/IMG_1939.jpeg",
+  },
+  {
+    title: "아파트 거실 창호 교체",
+    before: "/IMG_1942.jpeg",
+    after: "/IMG_1941.jpeg",
+  },
+];
+
+const processSteps = [
+  "시공 상담",
+  "현장 상태 확인",
+  "창호 실측",
+  "자재 및 시공 범위 검토",
+  "견적 안내",
+  "시공 일정 협의",
+  "창호 교체 및 설치",
+  "마감 및 최종 점검",
+];
+
 export default function RegionServicePage({
   params,
 }: {
@@ -239,16 +285,9 @@ export default function RegionServicePage({
 
   if (!data) notFound();
 
-  const {
-    cityData,
-    districtName,
-    serviceData,
-  } = data;
-
+  const { cityData, districtName, serviceData } = data;
   const location = `${cityData.name} ${districtName}`;
-
-  const pageTitle =
-    `${location} ${serviceData.name}`;
+  const title = `${location} ${serviceData.name}`;
 
   const currentUrl =
     `${SITE}/area/${params.city}/` +
@@ -257,7 +296,7 @@ export default function RegionServicePage({
   const serviceSchema = {
     "@context": "https://schema.org",
     "@type": "Service",
-    name: pageTitle,
+    name: title,
     serviceType: serviceData.name,
     description: serviceData.description,
     provider: {
@@ -271,7 +310,7 @@ export default function RegionServicePage({
       name: `${cityData.fullName} ${districtName}`,
     },
     url: currentUrl,
-    image: `${SITE}${serviceData.image}`,
+    image: `${SITE}${serviceData.hero}`,
   };
 
   const otherServices = Object.entries(services).filter(
@@ -295,11 +334,11 @@ export default function RegionServicePage({
       />
 
       <main>
-        {/* 지역별 대표 사진 */}
+        {/* 상단 대표 사진 */}
         <section
           style={{
             position: "relative",
-            minHeight: 490,
+            minHeight: 500,
             display: "flex",
             alignItems: "center",
             color: "#fff",
@@ -307,15 +346,12 @@ export default function RegionServicePage({
           }}
         >
           <Image
-            src={serviceData.image}
-            alt={`${pageTitle} 창호 참고 이미지`}
+            src={serviceData.hero}
+            alt={`${title} 창호 참고 이미지`}
             fill
             priority
             sizes="100vw"
-            style={{
-              objectFit: "cover",
-              objectPosition: "center",
-            }}
+            style={{ objectFit: "cover" }}
           />
 
           <div
@@ -360,7 +396,7 @@ export default function RegionServicePage({
                 color: "#e4e9ed",
               }}
             >
-              {location} 지역의
+              {location} 지역
               <br />
               {serviceData.description}
             </p>
@@ -376,7 +412,7 @@ export default function RegionServicePage({
           </div>
         </section>
 
-        {/* 지역 및 서비스 소개 */}
+        {/* 지역별 서비스 소개 */}
         <section className="section">
           <div className="container">
             <span className="eyebrow">
@@ -394,7 +430,7 @@ export default function RegionServicePage({
               계획하고 계신가요?
               창호 교체는 건물 구조, 창문 크기,
               기존 창틀 상태와 설치 환경에 따라
-              필요한 시공 방법이 달라집니다.
+              시공 방법이 달라질 수 있습니다.
             </p>
 
             <p className="section-desc">
@@ -402,24 +438,19 @@ export default function RegionServicePage({
               기존 창호 상태와 교체 범위를 확인하고
               현장 조건에 맞는 설치 방법과
               견적을 안내합니다.
-              실제 방문 가능 일정과 지역은
+              출장 가능 여부와 일정은
               상담 시 확인해 주세요.
             </p>
 
             <div className="features-grid">
               {serviceData.items.map((item, index) => (
-                <article
-                  className="feature"
-                  key={item}
-                >
+                <article className="feature" key={item}>
                   <span className="feature-number">
                     0{index + 1}
                   </span>
-
                   <h3>{item}</h3>
-
                   <p>
-                    창호 규격과 현장 상태를 확인해
+                    현장 조건과 창호 규격을 확인해
                     교체 및 설치 범위를 안내합니다.
                   </p>
                 </article>
@@ -428,7 +459,7 @@ export default function RegionServicePage({
           </div>
         </section>
 
-        {/* 카테고리별 사진 */}
+        {/* 카테고리별 사진 갤러리 */}
         <section className="section section-light">
           <div className="container">
             <span className="eyebrow">
@@ -438,36 +469,91 @@ export default function RegionServicePage({
             <h2 className="section-title">
               {serviceData.shortName}
               <br />
-              창호 사진
+              창호 사진 갤러리
             </h2>
 
             <p className="section-desc">
-              창호 교체와 설치 형태를
-              참고할 수 있는 사진입니다.
+              창호 교체 및 설치 형태를
+              확인할 수 있는 참고 사진입니다.
               해당 지역에서 촬영한 시공 사례를
               의미하지는 않습니다.
             </p>
 
-            {params.service === "apartment" ? (
+            <div
+              style={{
+                display: "grid",
+                gridTemplateColumns:
+                  "repeat(auto-fit, minmax(min(100%, 290px), 1fr))",
+                gap: 18,
+                marginTop: 35,
+              }}
+            >
+              {serviceData.gallery.map((photo) => (
+                <figure
+                  key={photo.src}
+                  style={{ margin: 0 }}
+                >
+                  <div
+                    style={{
+                      position: "relative",
+                      aspectRatio: "4 / 3",
+                      overflow: "hidden",
+                      background: "#e8edf0",
+                    }}
+                  >
+                    <Image
+                      src={photo.src}
+                      alt={photo.alt}
+                      fill
+                      sizes="(max-width: 768px) 100vw, 50vw"
+                      style={{ objectFit: "cover" }}
+                    />
+                  </div>
+
+                  <figcaption
+                    style={{
+                      marginTop: 12,
+                      fontSize: 14,
+                      fontWeight: 600,
+                    }}
+                  >
+                    {photo.caption}
+                  </figcaption>
+                </figure>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* 아파트 시공 전후 비교 */}
+        {params.service === "apartment" && (
+          <section className="section">
+            <div className="container">
+              <span className="eyebrow">
+                BEFORE & AFTER
+              </span>
+
+              <h2 className="section-title">
+                아파트 샷시
+                <br />
+                시공 전후 비교
+              </h2>
+
+              <p className="section-desc">
+                창호 교체 전후 모습을
+                사진으로 비교해 보세요.
+                해당 지역의 시공 실적을
+                의미하지는 않습니다.
+              </p>
+
               <div
                 style={{
                   display: "grid",
-                  gap: 40,
+                  gap: 42,
                   marginTop: 35,
                 }}
               >
-                {[
-                  {
-                    title: "아파트 베란다 창호 교체",
-                    before: "/IMG_1938.jpeg",
-                    after: "/IMG_1939.jpeg",
-                  },
-                  {
-                    title: "아파트 거실 창호 교체",
-                    before: "/IMG_1942.jpeg",
-                    after: "/IMG_1941.jpeg",
-                  },
-                ].map((project) => (
+                {beforeAfter.map((project) => (
                   <article key={project.title}>
                     <h3
                       style={{
@@ -498,7 +584,10 @@ export default function RegionServicePage({
                           korean: "시공 후",
                         },
                       ].map((photo) => (
-                        <div key={photo.label}>
+                        <figure
+                          key={photo.label}
+                          style={{ margin: 0 }}
+                        >
                           <div
                             style={{
                               position: "relative",
@@ -508,7 +597,7 @@ export default function RegionServicePage({
                           >
                             <Image
                               src={photo.src}
-                              alt={`${project.title} ${photo.korean} 참고 사진`}
+                              alt={`${project.title} ${photo.korean}`}
                               fill
                               sizes="(max-width: 768px) 100vw, 50vw"
                               style={{
@@ -538,44 +627,26 @@ export default function RegionServicePage({
                             </span>
                           </div>
 
-                          <p
+                          <figcaption
                             style={{
-                              fontWeight: 600,
                               marginTop: 12,
+                              fontWeight: 600,
                             }}
                           >
                             {photo.korean}
-                          </p>
-                        </div>
+                          </figcaption>
+                        </figure>
                       ))}
                     </div>
                   </article>
                 ))}
               </div>
-            ) : (
-              <div
-                style={{
-                  position: "relative",
-                  maxWidth: 850,
-                  aspectRatio: "4 / 3",
-                  marginTop: 30,
-                  overflow: "hidden",
-                }}
-              >
-                <Image
-                  src={serviceData.image}
-                  alt={`${serviceData.name} 창호 참고 사진`}
-                  fill
-                  sizes="(max-width: 900px) 100vw, 850px"
-                  style={{ objectFit: "cover" }}
-                />
-              </div>
-            )}
-          </div>
-        </section>
+            </div>
+          </section>
+        )}
 
         {/* 시공 절차 */}
-        <section className="section">
+        <section className="section section-light">
           <div className="container">
             <span className="eyebrow">
               INSTALLATION PROCESS
@@ -596,27 +667,18 @@ export default function RegionServicePage({
                 marginTop: 30,
               }}
             >
-              {[
-                "상담 및 문의",
-                "현장 상태 확인",
-                "창호 실측",
-                "시공 범위 검토",
-                "견적 안내",
-                "시공 일정 협의",
-                "창호 교체 및 설치",
-                "마감 및 최종 점검",
-              ].map((step, index) => (
+              {processSteps.map((step, index) => (
                 <div
                   key={step}
                   style={{
                     padding: 24,
+                    background: "#fff",
                     border: "1px solid #e0e5e9",
                   }}
                 >
                   <span className="eyebrow">
                     STEP {String(index + 1).padStart(2, "0")}
                   </span>
-
                   <h3
                     style={{
                       fontSize: 17,
@@ -640,8 +702,8 @@ export default function RegionServicePage({
           </div>
         </section>
 
-        {/* 동일 지역 다른 카테고리 */}
-        <section className="section section-light">
+        {/* 동일 지역 다른 서비스 */}
+        <section className="section">
           <div className="container">
             <span className="eyebrow">
               RELATED SERVICES
@@ -668,7 +730,6 @@ export default function RegionServicePage({
                   href={`/area/${params.city}/${params.district}/${key}`}
                   style={{
                     padding: 24,
-                    background: "#fff",
                     border: "1px solid #e0e5e9",
                     display: "flex",
                     justifyContent: "space-between",
@@ -688,7 +749,7 @@ export default function RegionServicePage({
         </section>
 
         {/* 동일 도시 다른 지역구 */}
-        <section className="section">
+        <section className="section section-light">
           <div className="container">
             <span className="eyebrow">
               NEARBY DISTRICTS
@@ -715,6 +776,7 @@ export default function RegionServicePage({
                   style={{
                     padding: "12px 17px",
                     border: "1px solid #dce2e6",
+                    background: "#fff",
                     fontSize: 14,
                     color: "#344450",
                     textDecoration: "none",
@@ -738,7 +800,7 @@ export default function RegionServicePage({
         </section>
 
         {/* 상담 */}
-        <section className="section section-light">
+        <section className="section">
           <div
             className="container"
             style={{ textAlign: "center" }}
