@@ -1,17 +1,26 @@
 
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ArrowRight, MapPin, Phone } from "lucide-react";
+import {
+  ArrowRight,
+  ArrowUpRight,
+  MapPin,
+  Phone,
+} from "lucide-react";
 
+const SITE = "https://geujipwindow.com";
 const PHONE = "010-8176-3350";
+const TEL = "tel:01081763350";
 
-const regions = {
+const cities = {
   busan: {
     name: "부산",
     fullName: "부산광역시",
     description:
-      "부산 아파트, 단독주택, 빌라 샷시 교체 및 설치 상담. 해운대구부터 기장군까지 지역별 창호 시공 정보를 확인하세요.",
+      "부산 아파트·단독주택·빌라 샷시 교체 및 창호 설치 안내",
+    image: "/IMG_1939.jpeg",
     districts: {
       haeundae: "해운대구",
       suyeong: "수영구",
@@ -35,7 +44,8 @@ const regions = {
     name: "울산",
     fullName: "울산광역시",
     description:
-      "울산 아파트, 단독주택, 빌라 샷시 교체 및 설치 상담. 남구, 중구, 동구, 북구, 울주군 지역별 창호 시공 정보를 확인하세요.",
+      "울산 아파트·단독주택·빌라 샷시 교체 및 창호 설치 안내",
+    image: "/IMG_1944.jpeg",
     districts: {
       nam: "남구",
       jung: "중구",
@@ -48,7 +58,8 @@ const regions = {
     name: "창원",
     fullName: "경상남도 창원시",
     description:
-      "창원 아파트, 단독주택, 빌라 샷시 교체 및 설치 상담. 의창구, 성산구, 마산합포구, 마산회원구, 진해구 지역별 창호 시공 정보를 확인하세요.",
+      "창원 아파트·단독주택·빌라 샷시 교체 및 창호 설치 안내",
+    image: "/IMG_1943.jpeg",
     districts: {
       uichang: "의창구",
       seongsan: "성산구",
@@ -59,292 +70,482 @@ const regions = {
   },
 } as const;
 
-type City = keyof typeof regions;
+const services = [
+  {
+    key: "apartment",
+    title: "아파트 샷시 교체·설치",
+    description:
+      "베란다, 거실창, 방창 등 아파트 노후 창호 교체 안내",
+    image: "/IMG_1939.jpeg",
+  },
+  {
+    key: "house",
+    title: "단독주택 샷시 교체·설치",
+    description:
+      "단독주택과 전원주택의 창호 교체 및 설치 안내",
+    image: "/IMG_1944.jpeg",
+  },
+  {
+    key: "villa",
+    title: "빌라 샷시 교체·설치",
+    description:
+      "빌라와 다세대주택의 노후 창호 교체 안내",
+    image: "/IMG_1943.jpeg",
+  },
+] as const;
 
-const serviceList = [
-  { key: "apartment", name: "아파트 샷시 교체·설치" },
-  { key: "house", name: "단독주택 샷시 교체·설치" },
-  { key: "villa", name: "빌라 샷시 교체·설치" },
-];
+type CityKey = keyof typeof cities;
 
-function getRegion(city: string) {
-  if (!(city in regions)) return null;
-  return regions[city as City];
+type PageProps = {
+  params: {
+    city: string;
+  };
+};
+
+function getCity(city: string) {
+  if (!(city in cities)) return null;
+  return cities[city as CityKey];
 }
 
 export function generateStaticParams() {
-  return Object.keys(regions).map((city) => ({ city }));
+  return Object.keys(cities).map((city) => ({
+    city,
+  }));
 }
 
 export function generateMetadata({
   params,
-}: {
-  params: { city: string };
-}): Metadata {
-  const region = getRegion(params.city);
+}: PageProps): Metadata {
+  const city = getCity(params.city);
 
-  if (!region) {
-    return { title: "지역을 찾을 수 없습니다" };
+  if (!city) {
+    return {
+      title: "지역을 찾을 수 없습니다",
+      robots: {
+        index: false,
+        follow: false,
+      },
+    };
   }
 
+  const url = `${SITE}/area/${params.city}`;
+
+  const description =
+    `${city.name} 샷시 교체·설치 안내. ` +
+    `아파트 베란다 샷시, 단독주택 창호, ` +
+    `빌라 창문 교체 정보를 확인하세요. ` +
+    `그집창호 상담 ${PHONE}.`;
+
   return {
-    title: `${region.name} 샷시 교체·설치`,
-    description: region.description,
+    title: `${city.name} 샷시 교체·설치 | 지역별 창호 안내`,
+    description,
+    keywords: [
+      `${city.name} 샷시`,
+      `${city.name} 샷시교체`,
+      `${city.name} 창호교체`,
+      `${city.name} 아파트 샷시`,
+      `${city.name} 단독주택 샷시`,
+      `${city.name} 빌라 샷시`,
+      "그집창호",
+    ],
     alternates: {
-      canonical: `/area/${params.city}`,
+      canonical: url,
+    },
+    openGraph: {
+      type: "website",
+      locale: "ko_KR",
+      siteName: "그집창호",
+      title: `${city.name} 샷시 교체·설치 | 그집창호`,
+      description,
+      url,
+      images: [
+        {
+          url: city.image,
+          alt: `${city.name} 샷시 교체 참고 사진`,
+        },
+      ],
+    },
+    robots: {
+      index: true,
+      follow: true,
     },
   };
 }
 
 export default function CityPage({
   params,
-}: {
-  params: { city: string };
-}) {
-  const region = getRegion(params.city);
+}: PageProps) {
+  const city = getCity(params.city);
 
-  if (!region) notFound();
+  if (!city) notFound();
 
-  const districts = Object.entries(region.districts);
+  const districts = Object.entries(city.districts);
 
   return (
-    <>
-      <main>
-        <section
+    <main>
+      {/* 지역 대표 이미지 */}
+      <section
+        style={{
+          position: "relative",
+          minHeight: 520,
+          display: "flex",
+          alignItems: "center",
+          overflow: "hidden",
+          color: "#fff",
+        }}
+      >
+        <Image
+          src={city.image}
+          alt={`${city.name} 샷시 교체 및 창호 설치 참고 사진`}
+          fill
+          priority
+          sizes="100vw"
           style={{
-            background: "#111820",
-            color: "#fff",
-            padding: "155px 0 95px",
+            objectFit: "cover",
+          }}
+        />
+
+        <div
+          style={{
+            position: "absolute",
+            inset: 0,
+            background:
+              "linear-gradient(90deg, rgba(8,16,24,.9), rgba(8,16,24,.3))",
+          }}
+        />
+
+        <div
+          className="container"
+          style={{
+            position: "relative",
+            zIndex: 1,
+            paddingTop: 145,
+            paddingBottom: 85,
           }}
         >
-          <div className="container">
-            <span className="eyebrow">
-              GEUJIP WINDOW / SERVICE AREA
-            </span>
+          <p className="hero-kicker">
+            GEUJIP WINDOW / SERVICE AREA
+          </p>
 
-            <h1
-              style={{
-                fontSize: "clamp(36px, 5vw, 62px)",
-                lineHeight: 1.25,
-                letterSpacing: "-1.5px",
-                margin: "25px 0",
-              }}
-            >
-              {region.name}
-              <br />
-              샷시 교체·설치
-            </h1>
+          <h1
+            style={{
+              fontSize: "clamp(34px, 6vw, 64px)",
+              lineHeight: 1.25,
+              fontWeight: 800,
+              margin: "24px 0",
+            }}
+          >
+            {city.name} 샷시 교체
+            <br />
+            창호 설치 안내
+          </h1>
 
-            <p
-              style={{
-                maxWidth: 650,
-                lineHeight: 1.9,
-                color: "#d0d7dd",
-              }}
-            >
-              {region.description}
-            </p>
+          <p
+            style={{
+              color: "#e4e9ed",
+              fontSize: 17,
+              lineHeight: 1.9,
+              maxWidth: 650,
+            }}
+          >
+            아파트 · 단독주택 · 빌라
+            <br />
+            창호 교체 및 설치 상담
+          </p>
 
-            <a
-              href="tel:01081763350"
-              className="btn btn-white"
-              style={{ marginTop: 30, gap: 10 }}
-            >
-              <Phone size={17} />
-              견적 상담하기
-            </a>
+          <a
+            href={TEL}
+            className="btn btn-white"
+            style={{ marginTop: 28 }}
+          >
+            <Phone size={17} />
+            전화 상담 문의
+          </a>
+        </div>
+      </section>
+
+      {/* 지역 소개 */}
+      <section className="section">
+        <div className="container">
+          <span className="eyebrow">
+            ABOUT SERVICE AREA
+          </span>
+
+          <h2 className="section-title">
+            {city.name} 창호 교체
+            <br />
+            그집창호에서 상담하세요.
+          </h2>
+
+          <p className="section-desc">
+            {city.fullName} 지역의 아파트,
+            단독주택, 빌라 샷시 교체 및
+            창호 설치 관련 정보를 안내합니다.
+          </p>
+
+          <p className="section-desc">
+            창호 교체는 건물 구조, 창틀 상태,
+            설치 위치와 자재 사양에 따라
+            시공 방법과 견적이 달라질 수 있습니다.
+            실제 출장 가능 여부와 일정은
+            상담 시 확인해 주세요.
+          </p>
+        </div>
+      </section>
+
+      {/* 서비스별 이미지 카드 */}
+      <section className="section section-light">
+        <div className="container">
+          <span className="eyebrow">
+            WINDOW SERVICES
+          </span>
+
+          <h2 className="section-title">
+            {city.name} 샷시 교체
+            <br />
+            서비스 종류
+          </h2>
+
+          <p className="section-desc">
+            건물 유형에 맞는 창호 교체 및
+            설치 서비스를 확인하세요.
+          </p>
+
+          <div className="services-grid">
+            {services.map((service) => (
+              <article
+                key={service.key}
+                className="service-card"
+              >
+                <div
+                  style={{
+                    position: "relative",
+                    height: 260,
+                    overflow: "hidden",
+                  }}
+                >
+                  <Image
+                    src={service.image}
+                    alt={`${service.title} 참고 이미지`}
+                    fill
+                    sizes="(max-width: 768px) 100vw, 33vw"
+                    style={{ objectFit: "cover" }}
+                  />
+                </div>
+
+                <div className="service-body">
+                  <h3>{service.title}</h3>
+
+                  <p>{service.description}</p>
+
+                  <Link
+                    href={`/services/${service.key}`}
+                    className="service-link"
+                  >
+                    서비스 자세히 보기 →
+                  </Link>
+                </div>
+              </article>
+            ))}
           </div>
-        </section>
+        </div>
+      </section>
 
-        <section className="section">
-          <div className="container">
-            <span className="eyebrow">
-              SELECT YOUR DISTRICT
-            </span>
+      {/* 구·군별 사진 카드 */}
+      <section className="section">
+        <div className="container">
+          <span className="eyebrow">
+            DISTRICT SERVICES
+          </span>
 
-            <h2 className="section-title">
-              {region.fullName}
-              <br />
-              지역별 시공 안내
-            </h2>
+          <h2 className="section-title">
+            {city.name}
+            <br />
+            구·군별 샷시 교체 안내
+          </h2>
 
-            <p className="section-desc">
-              원하는 구·군과 시공 서비스를 선택하면
-              해당 지역의 상세 안내 페이지로 이동합니다.
-            </p>
+          <p className="section-desc">
+            해당 지역을 선택하면
+            아파트·단독주택·빌라 샷시 교체
+            상세 페이지로 이동할 수 있습니다.
+          </p>
 
-            <div
-              style={{
-                display: "grid",
-                gridTemplateColumns:
-                  "repeat(auto-fit, minmax(min(100%, 300px), 1fr))",
-                gap: 18,
-                marginTop: 38,
-              }}
-            >
-              {districts.map(([slug, district]) => (
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns:
+                "repeat(auto-fit, minmax(min(100%, 260px), 1fr))",
+              gap: 18,
+              marginTop: 35,
+            }}
+          >
+            {districts.map(([slug, name], index) => {
+              const image =
+                services[index % services.length].image;
+
+              return (
                 <article
                   key={slug}
                   style={{
+                    border: "1px solid #e0e5e9",
                     background: "#fff",
-                    border: "1px solid #e1e5e9",
-                    padding: 25,
+                    overflow: "hidden",
                   }}
                 >
-                  <div
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      gap: 8,
-                      marginBottom: 18,
-                    }}
+                  <Link
+                    href={`/area/${params.city}/${slug}/apartment`}
+                    aria-label={`${city.name} ${name} 아파트 샷시 교체 안내`}
                   >
-                    <MapPin size={18} color="#738392" />
+                    <div
+                      style={{
+                        position: "relative",
+                        height: 190,
+                        overflow: "hidden",
+                      }}
+                    >
+                      <Image
+                        src={image}
+                        alt={`${city.name} ${name} 창호 참고 이미지`}
+                        fill
+                        sizes="(max-width: 768px) 100vw, 33vw"
+                        style={{
+                          objectFit: "cover",
+                        }}
+                      />
+                    </div>
+                  </Link>
+
+                  <div style={{ padding: 22 }}>
+                    <p
+                      style={{
+                        fontSize: 12,
+                        letterSpacing: 1.5,
+                        color: "#6b7c89",
+                        fontWeight: 700,
+                      }}
+                    >
+                      {city.name.toUpperCase()} AREA
+                    </p>
 
                     <h3
                       style={{
-                        fontSize: 21,
-                        margin: 0,
+                        fontSize: 22,
+                        margin: "10px 0 16px",
                       }}
                     >
-                      {region.name} {district}
+                      {name} 샷시 교체
                     </h3>
-                  </div>
 
-                  <div
-                    style={{
-                      display: "grid",
-                      gap: 8,
-                    }}
-                  >
-                    {serviceList.map((service) => (
-                      <Link
-                        key={service.key}
-                        href={`/area/${params.city}/${slug}/${service.key}`}
-                        style={{
-                          display: "flex",
-                          alignItems: "center",
-                          justifyContent: "space-between",
-                          gap: 10,
-                          padding: "12px 0",
-                          borderBottom: "1px solid #edf0f2",
-                          fontSize: 13,
-                          color: "#465562",
-                        }}
-                      >
-                        {service.name}
-                        <ArrowRight size={15} />
-                      </Link>
-                    ))}
+                    <div
+                      style={{
+                        display: "flex",
+                        flexDirection: "column",
+                        gap: 11,
+                      }}
+                    >
+                      {services.map((service) => (
+                        <Link
+                          key={service.key}
+                          href={`/area/${params.city}/${slug}/${service.key}`}
+                          style={{
+                            display: "flex",
+                            justifyContent: "space-between",
+                            alignItems: "center",
+                            gap: 10,
+                            color: "#344450",
+                            fontSize: 14,
+                            textDecoration: "none",
+                          }}
+                        >
+                          {service.title}
+                          <ArrowUpRight size={16} />
+                        </Link>
+                      ))}
+                    </div>
                   </div>
                 </article>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        <section className="section section-light">
-          <div className="container">
-            <span className="eyebrow">
-              OTHER SERVICE AREAS
-            </span>
-
-            <h2 className="section-title">
-              다른 지역 확인하기
-            </h2>
-
-            <div
-              style={{
-                display: "flex",
-                flexWrap: "wrap",
-                gap: 12,
-                marginTop: 30,
-              }}
-            >
-              {Object.entries(regions)
-                .filter(([key]) => key !== params.city)
-                .map(([key, value]) => (
-                  <Link
-                    key={key}
-                    href={`/area/${key}`}
-                    className="btn btn-dark"
-                    style={{ gap: 12 }}
-                  >
-                    {value.name} 샷시 시공
-                    <ArrowRight size={16} />
-                  </Link>
-                ))}
-            </div>
-          </div>
-        </section>
-
-        <section className="section">
-          <div
-            className="container"
-            style={{ textAlign: "center" }}
-          >
-            <span className="eyebrow">
-              CONTACT & ESTIMATE
-            </span>
-
-            <h2 className="section-title">
-              {region.name} 샷시 교체
-              <br />
-              견적 상담
-            </h2>
-
-            <p className="section-desc">
-              현장 조건과 시공 범위에 따라
-              견적과 출장 가능 여부를 안내합니다.
-            </p>
-
-            <a
-              href="tel:01081763350"
-              className="btn btn-dark"
-              style={{ marginTop: 25, gap: 10 }}
-            >
-              <Phone size={17} />
-              {PHONE}
-            </a>
-          </div>
-        </section>
-      </main>
-
-      <footer className="footer">
-        <div className="container">
-          <div className="footer-grid">
-            <div>
-              <div className="logo">
-                그집창호
-                <span>GEUJIP WINDOW</span>
-              </div>
-
-              <p>
-                아파트 · 단독주택 · 빌라
-                <br />
-                샷시 교체 및 설치
-              </p>
-            </div>
-
-            <div>
-              <p>시공 및 견적 상담</p>
-              <a href="tel:01081763350">
-                {PHONE}
-              </a>
-            </div>
-          </div>
-
-          <div className="footer-bottom">
-            © {new Date().getFullYear()} GEUJIP WINDOW.
+              );
+            })}
           </div>
         </div>
-      </footer>
+      </section>
 
-      <div className="mobile-call">
-        <a href="tel:01081763350">
-          ☎ 전화 상담 · {PHONE}
-        </a>
-      </div>
-    </>
+      {/* 다른 도시 */}
+      <section className="section section-light">
+        <div className="container">
+          <span className="eyebrow">
+            OTHER SERVICE AREAS
+          </span>
+
+          <h2 className="section-title">
+            다른 지역 안내
+          </h2>
+
+          <div
+            style={{
+              display: "flex",
+              flexWrap: "wrap",
+              gap: 12,
+              marginTop: 25,
+            }}
+          >
+            {Object.entries(cities)
+              .filter(([key]) => key !== params.city)
+              .map(([key, item]) => (
+                <Link
+                  key={key}
+                  href={`/area/${key}`}
+                  className="btn btn-dark"
+                >
+                  {item.name} 샷시 교체
+                  <ArrowRight size={16} />
+                </Link>
+              ))}
+          </div>
+
+          <div style={{ marginTop: 25 }}>
+            <Link href="/area">
+              <MapPin
+                size={16}
+                style={{ display: "inline-block" }}
+              />{" "}
+              전체 지역 보기
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* 전화 상담 */}
+      <section className="section">
+        <div
+          className="container"
+          style={{ textAlign: "center" }}
+        >
+          <span className="eyebrow">
+            CONTACT US
+          </span>
+
+          <h2 className="section-title">
+            {city.name} 샷시 교체
+            <br />
+            견적 상담 문의
+          </h2>
+
+          <p className="section-desc">
+            건물 유형, 창호 크기와 교체 범위를
+            알려주시면 상담을 도와드립니다.
+          </p>
+
+          <a
+            href={TEL}
+            className="btn btn-dark"
+            style={{ marginTop: 25 }}
+          >
+            <Phone size={17} />
+            {PHONE}
+          </a>
+        </div>
+      </section>
+    </main>
   );
 }
