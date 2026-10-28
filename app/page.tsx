@@ -14,18 +14,47 @@ const PHONE = "010-8176-3350";
 const TEL = "tel:01081763350";
 
 export const metadata: Metadata = {
-  title: "그집창호 | 아파트·단독주택·빌라 샷시 교체 설치",
+  title: "부산·울산·창원 샷시 교체·설치 전문",
   description:
-    "그집창호 샷시 교체·설치 전문 안내. 아파트 베란다 샷시, 단독주택 창호, 빌라 샷시 교체 상담. 시공 전후 사진과 부산·울산·창원 지역별 정보를 확인하세요.",
+    "부산·울산·창원 샷시 교체 및 설치 상담 그집창호. 아파트 베란다 샷시, 거실창, 단독주택 창호, 빌라 샷시 교체 안내. 아파트 창호 시공 전후 사진과 시공과정을 확인하세요. 상담 010-8176-3350",
+  keywords: [
+    "그집창호",
+    "부산 샷시",
+    "울산 샷시",
+    "창원 샷시",
+    "부산 샷시교체",
+    "울산 샷시교체",
+    "창원 샷시교체",
+    "아파트 샷시교체",
+    "단독주택 샷시교체",
+    "빌라 샷시교체",
+    "베란다 샷시",
+    "창호 교체",
+    "창호 설치",
+  ],
   alternates: {
-    canonical: "/",
+    canonical: SITE,
   },
   openGraph: {
-    title: "그집창호 | 샷시 교체·설치",
+    type: "website",
+    locale: "ko_KR",
+    siteName: "그집창호",
+    title: "그집창호 | 부산·울산·창원 샷시 교체·설치",
     description:
-      "샷시 교체 전후 사진과 아파트·단독주택·빌라 창호 시공 안내.",
+      "아파트·단독주택·빌라 샷시 교체 및 설치 안내. 시공 전후 사진과 지역별 창호 교체 정보를 확인하세요.",
     url: SITE,
-    images: ["/IMG_1944.jpeg"],
+    images: [
+      {
+        url: "/IMG_1944.jpeg",
+        width: 1200,
+        height: 630,
+        alt: "그집창호 창호 설치 사진",
+      },
+    ],
+  },
+  robots: {
+    index: true,
+    follow: true,
   },
 };
 
@@ -60,7 +89,7 @@ const projects = [
   {
     title: "아파트 베란다 샷시 교체",
     description:
-      "기존 창호를 철거하고 새 창호를 설치한 전후 비교입니다.",
+      "기존 창호와 새 창호 설치 후 모습을 비교한 사진입니다.",
     before: "/IMG_1938.jpeg",
     after: "/IMG_1939.jpeg",
   },
@@ -73,10 +102,42 @@ const projects = [
   },
 ];
 
+const regions = [
+  { name: "부산 샷시 교체", href: "/area/busan" },
+  { name: "울산 샷시 교체", href: "/area/ulsan" },
+  { name: "창원 샷시 교체", href: "/area/changwon" },
+];
+
+const organizationSchema = {
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  name: "그집창호",
+  url: SITE,
+  telephone: PHONE,
+  description:
+    "아파트·단독주택·빌라 샷시 교체 및 창호 설치 상담",
+  areaServed: [
+    { "@type": "Place", name: "부산광역시" },
+    { "@type": "Place", name: "울산광역시" },
+    { "@type": "Place", name: "경상남도 창원시" },
+  ],
+};
+
 export default function Home() {
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(organizationSchema).replace(
+            /</g,
+            "\\u003c"
+          ),
+        }}
+      />
+
       <main>
+        {/* 메인 대표 이미지 */}
         <section
           style={{
             position: "relative",
@@ -89,7 +150,7 @@ export default function Home() {
         >
           <Image
             src="/IMG_1944.jpeg"
-            alt="그집창호 창호 설치 모습"
+            alt="그집창호 샷시 교체 및 창호 설치 참고 사진"
             fill
             priority
             sizes="100vw"
@@ -143,11 +204,11 @@ export default function Home() {
                 lineHeight: 1.9,
               }}
             >
-              아파트 · 단독주택 · 빌라
+              부산 · 울산 · 창원 창호 시공 안내
               <br />
-              샷시 교체부터 창호 설치와 마감까지
+              아파트 · 단독주택 · 빌라 샷시 교체
               <br />
-              그집창호와 상담하세요.
+              창호 설치부터 마감까지 상담하세요.
             </p>
 
             <div
@@ -159,7 +220,7 @@ export default function Home() {
               }}
             >
               <a href={TEL} className="btn btn-white">
-                무료 상담 문의
+                전화 상담 문의
                 <ArrowUpRight size={17} />
               </a>
 
@@ -174,6 +235,7 @@ export default function Home() {
           </div>
         </section>
 
+        {/* 업체 소개 */}
         <section className="section">
           <div
             className="container"
@@ -244,7 +306,7 @@ export default function Home() {
             >
               <Image
                 src="/IMG_1943.jpeg"
-                alt="창호 설치 상태 참고 사진"
+                alt="샷시 교체 및 창호 설치 참고 이미지"
                 fill
                 sizes="(max-width: 768px) 100vw, 50vw"
                 style={{ objectFit: "cover" }}
@@ -253,6 +315,7 @@ export default function Home() {
           </div>
         </section>
 
+        {/* 서비스 카테고리 */}
         <section
           id="services"
           className="section section-light"
@@ -267,8 +330,9 @@ export default function Home() {
             </h2>
 
             <p className="section-desc">
-              건물 유형에 맞는 서비스를
-              선택해 자세한 내용을 확인하세요.
+              아파트, 단독주택, 빌라 등
+              건물 유형에 맞는 샷시 교체 및
+              설치 서비스를 확인하세요.
             </p>
 
             <div className="services-grid">
@@ -277,7 +341,10 @@ export default function Home() {
                   className="service-card"
                   key={service.href}
                 >
-                  <Link href={service.href}>
+                  <Link
+                    href={service.href}
+                    aria-label={`${service.title} 자세히 보기`}
+                  >
                     <div
                       style={{
                         position: "relative",
@@ -287,7 +354,7 @@ export default function Home() {
                     >
                       <Image
                         src={service.image}
-                        alt={`${service.title} 안내 이미지`}
+                        alt={`${service.title} 창호 참고 사진`}
                         fill
                         sizes="(max-width: 768px) 100vw, 33vw"
                         style={{ objectFit: "cover" }}
@@ -316,6 +383,7 @@ export default function Home() {
           </div>
         </section>
 
+        {/* 시공 전후 사진 */}
         <section
           id="before-after"
           className="section"
@@ -332,8 +400,8 @@ export default function Home() {
             </h2>
 
             <p className="section-desc">
-              기존 창호와 교체 후 창호를
-              비교해 보세요.
+              아파트 베란다와 거실 창호의
+              교체 전후 모습을 확인하세요.
             </p>
 
             <div
@@ -359,6 +427,7 @@ export default function Home() {
                       <span className="eyebrow">
                         PROJECT 0{index + 1}
                       </span>
+
                       <h3
                         style={{
                           fontSize: 23,
@@ -367,6 +436,7 @@ export default function Home() {
                       >
                         {project.title}
                       </h3>
+
                       <p className="section-desc">
                         {project.description}
                       </p>
@@ -411,6 +481,7 @@ export default function Home() {
                               objectFit: "cover",
                             }}
                           />
+
                           <span
                             style={{
                               position: "absolute",
@@ -467,7 +538,61 @@ export default function Home() {
           </div>
         </section>
 
+        {/* 지역별 내부 링크 */}
         <section className="section section-light">
+          <div className="container">
+            <span className="eyebrow">
+              SERVICE AREAS
+            </span>
+
+            <h2 className="section-title">
+              부산·울산·창원
+              <br />
+              지역별 샷시 안내
+            </h2>
+
+            <p className="section-desc">
+              지역별 아파트·단독주택·빌라
+              샷시 교체 및 설치 정보를
+              확인할 수 있습니다.
+              실제 출장 가능 여부는 상담 시 확인해 주세요.
+            </p>
+
+            <div
+              style={{
+                display: "grid",
+                gridTemplateColumns:
+                  "repeat(auto-fit, minmax(min(100%, 220px), 1fr))",
+                gap: 15,
+                marginTop: 30,
+              }}
+            >
+              {regions.map((region) => (
+                <Link
+                  key={region.href}
+                  href={region.href}
+                  style={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                    padding: "25px 22px",
+                    background: "#fff",
+                    border: "1px solid #e0e5e9",
+                    fontWeight: 700,
+                    color: "#202a33",
+                    textDecoration: "none",
+                  }}
+                >
+                  {region.name}
+                  <ArrowUpRight size={19} />
+                </Link>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* 상담 */}
+        <section className="section">
           <div
             className="container"
             style={{ textAlign: "center" }}
@@ -496,7 +621,7 @@ export default function Home() {
 
             <div style={{ marginTop: 25 }}>
               <Link href="/area">
-                부산·울산·창원 지역별 안내 →
+                전체 시공지역 안내 →
               </Link>
             </div>
           </div>
