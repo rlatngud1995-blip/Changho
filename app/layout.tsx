@@ -42,6 +42,19 @@ export const metadata: Metadata = {
     title: "그집창호 | 프리미엄 창호 전문기업",
     description:
       "좋은 창은 공간의 가치를 바꿉니다. 아파트·단독주택·빌라 샷시 교체 및 설치 전문.",
+    images: [
+      {
+        url: "/IMG_1944.jpeg",
+        alt: "그집창호 샷시 교체 및 창호 설치",
+      },
+    ],
+  },
+
+  verification: {
+    other: {
+      "naver-site-verification":
+        "8654af37eb2e0695402a7c2ad07d870f0bb742e",
+    },
   },
 
   robots: {
