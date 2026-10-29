@@ -8,7 +8,6 @@ import {
   ArrowUpRight,
   Phone,
   MapPin,
-  CheckCircle2,
 } from "lucide-react";
 
 const SITE = "https://geujipwindow.com";
@@ -66,6 +65,7 @@ const services = {
   apartment: {
     name: "아파트 샷시 교체·설치",
     shortName: "아파트 샷시",
+    seoName: "아파트 창호 시공",
     description:
       "아파트 베란다, 거실창, 방창, 이중창 등 노후 창호 교체와 설치 안내",
     hero: "/IMG_1939.jpeg",
@@ -91,6 +91,7 @@ const services = {
   house: {
     name: "단독주택 샷시 교체·설치",
     shortName: "단독주택 샷시",
+    seoName: "단독주택 창호 시공",
     description:
       "단독주택과 전원주택의 창호 교체, 창문 설치 및 노후 샷시 개선 안내",
     hero: "/IMG_1944.jpeg",
@@ -116,6 +117,7 @@ const services = {
   villa: {
     name: "빌라 샷시 교체·설치",
     shortName: "빌라 샷시",
+    seoName: "빌라 창호 시공",
     description:
       "빌라와 다세대주택의 베란다 샷시, 거실창, 방창 교체 및 설치 안내",
     hero: "/IMG_1943.jpeg",
@@ -149,6 +151,10 @@ type PageParams = {
   service: string;
 };
 
+type PageProps = {
+  params: Promise<PageParams>;
+};
+
 function getPageData(params: PageParams) {
   if (!(params.city in regions)) return null;
   if (!(params.service in services)) return null;
@@ -172,7 +178,24 @@ function getPageData(params: PageParams) {
   };
 }
 
-export function generateStaticParams() {
+function getSearchLocation(
+  city: string,
+  cityName: string,
+  districtName: string
+) {
+  return city === "busan"
+    ? districtName
+    : `${cityName} ${districtName}`;
+}
+
+function getSeoTitle(
+  searchLocation: string,
+  seoName: string
+) {
+  return `${searchLocation} 샷시교체·설치 | ${seoName}`;
+}
+
+export function generateStaticParams(): PageParams[] {
   const result: PageParams[] = [];
 
   for (const city of Object.keys(regions) as CityKey[]) {
@@ -192,59 +215,94 @@ export function generateStaticParams() {
   return result;
 }
 
-export function generateMetadata({
+export async function generateMetadata({
   params,
-}: {
-  params: PageParams;
-}): Metadata {
-  const data = getPageData(params);
+}: PageProps): Promise<Metadata> {
+  const resolvedParams = await params;
+  const data = getPageData(resolvedParams);
 
   if (!data) {
     return {
       title: "페이지를 찾을 수 없습니다",
-      robots: { index: false, follow: false },
+      robots: {
+        index: false,
+        follow: false,
+      },
     };
   }
 
   const { cityData, districtName, serviceData } = data;
-  const location = `${cityData.name} ${districtName}`;
-  const title = `${location} ${serviceData.name}`;
-  const url =
-    `${SITE}/area/${params.city}/` +
-    `${params.district}/${params.service}`;
+
+  const searchLocation = getSearchLocation(
+    resolvedParams.city,
+    cityData.name,
+    districtName
+  );
+
+  const seoTitle = getSeoTitle(
+    searchLocation,
+    serviceData.seoName
+  );
+
+  const serviceLabel =
+    resolvedParams.service === "apartment"
+      ? "아파트"
+      : resolvedParams.service === "house"
+      ? "단독주택"
+      : "빌라";
 
   const description =
-    `${location} ${serviceData.name} 안내. ` +
-    `${serviceData.description}. ` +
-    `현장 실측, 창호 규격, 시공 범위와 견적을 ` +
-    `그집창호에서 상담하세요. 전화 ${PHONE}.`;
+    `${searchLocation} 샷시교체·설치 안내. ` +
+    `${serviceLabel} 창호교체, 창호설치, ` +
+    `창문교체 및 현장 실측과 견적 상담. ` +
+    `그집창호 ${PHONE}.`;
+
+  const url =
+    `${SITE}/area/${resolvedParams.city}/` +
+    `${resolvedParams.district}/${resolvedParams.service}`;
 
   return {
-    title,
+    title: {
+      absolute: `${seoTitle} | 그집창호`,
+    },
+
     description,
+
     keywords: [
-      `${location} 샷시교체`,
-      `${location} 창호교체`,
-      `${location} ${serviceData.shortName}`,
+      `${searchLocation} 샷시교체`,
+      `${searchLocation} 샷시설치`,
+      `${searchLocation} 샷시 교체`,
+      `${searchLocation} 샷시 설치`,
+      `${searchLocation} 샷시시공`,
+      `${searchLocation} 창호교체`,
+      `${searchLocation} 창호설치`,
+      `${searchLocation} 창문교체`,
+      `${searchLocation} 창문설치`,
+      `${searchLocation} ${serviceLabel} 샷시`,
+      `${cityData.name} ${districtName} 샷시교체`,
+      `${cityData.name} ${districtName} 샷시설치`,
       "그집창호",
     ],
+
     alternates: {
       canonical: url,
     },
+
     openGraph: {
       type: "website",
       locale: "ko_KR",
       siteName: "그집창호",
-      title: `${title} | 그집창호`,
+      title: `${seoTitle} | 그집창호`,
       description,
       url,
       images: [
         {
           url: serviceData.hero,
-          alt: `${serviceData.shortName} 참고 이미지`,
+          alt: `${searchLocation} ${serviceLabel} 창호 참고 이미지`,
         },
       ],
     },
+
     robots: {
       index: true,
       follow: true,
@@ -276,29 +334,41 @@ const processSteps = [
   "마감 및 최종 점검",
 ];
 
-export default function RegionServicePage({
+export default async function RegionServicePage({
   params,
-}: {
-  params: PageParams;
-}) {
-  const data = getPageData(params);
+}: PageProps) {
+  const resolvedParams = await params;
+  const data = getPageData(resolvedParams);
 
   if (!data) notFound();
 
   const { cityData, districtName, serviceData } = data;
+
   const location = `${cityData.name} ${districtName}`;
-  const title = `${location} ${serviceData.name}`;
+
+  const searchLocation = getSearchLocation(
+    resolvedParams.city,
+    cityData.name,
+    districtName
+  );
+
+  const seoTitle = getSeoTitle(
+    searchLocation,
+    serviceData.seoName
+  );
 
   const currentUrl =
-    `${SITE}/area/${params.city}/` +
-    `${params.district}/${params.service}`;
+    `${SITE}/area/${resolvedParams.city}/` +
+    `${resolvedParams.district}/${resolvedParams.service}`;
 
   const serviceSchema = {
     "@context": "https://schema.org",
     "@type": "Service",
-    name: title,
+    name: seoTitle,
     serviceType: serviceData.name,
-    description: serviceData.description,
+    description:
+      `${searchLocation} 샷시교체·설치. ` +
+      serviceData.description,
     provider: {
       "@type": "Organization",
       name: "그집창호",
@@ -314,12 +384,12 @@ export default function RegionServicePage({
   };
 
   const otherServices = Object.entries(services).filter(
-    ([key]) => key !== params.service
+    ([key]) => key !== resolvedParams.service
   );
 
   const districtLinks = Object.entries(
     cityData.districts
-  ).filter(([key]) => key !== params.district);
+  ).filter(([key]) => key !== resolvedParams.district);
 
   return (
     <>
@@ -347,7 +417,7 @@ export default function RegionServicePage({
         >
           <Image
             src={serviceData.hero}
-            alt={`${title} 창호 참고 이미지`}
+            alt={`${searchLocation} 샷시교체·설치 참고 이미지`}
             fill
             priority
             sizes="100vw"
@@ -384,7 +454,7 @@ export default function RegionServicePage({
                 fontWeight: 800,
               }}
             >
-              {location}
+              {searchLocation} 샷시교체·설치
               <br />
               {serviceData.name}
             </h1>
@@ -420,7 +490,7 @@ export default function RegionServicePage({
             </span>
 
             <h2 className="section-title">
-              {location}
+              {searchLocation} 샷시교체·설치
               <br />
               {serviceData.shortName} 안내
             </h2>
@@ -526,7 +596,7 @@ export default function RegionServicePage({
         </section>
 
         {/* 아파트 시공 전후 비교 */}
-        {params.service === "apartment" && (
+        {resolvedParams.service === "apartment" && (
           <section className="section">
             <div className="container">
               <span className="eyebrow">
@@ -727,7 +797,7 @@ export default function RegionServicePage({
               {otherServices.map(([key, item]) => (
                 <Link
                   key={key}
-                  href={`/area/${params.city}/${params.district}/${key}`}
+                  href={`/area/${resolvedParams.city}/${resolvedParams.district}/${key}`}
                   style={{
                     padding: 24,
                     border: "1px solid #e0e5e9",
@@ -772,7 +842,7 @@ export default function RegionServicePage({
               {districtLinks.map(([key, name]) => (
                 <Link
                   key={key}
-                  href={`/area/${params.city}/${key}/${params.service}`}
+                  href={`/area/${resolvedParams.city}/${key}/${resolvedParams.service}`}
                   style={{
                     padding: "12px 17px",
                     border: "1px solid #dce2e6",
@@ -782,14 +852,14 @@ export default function RegionServicePage({
                     textDecoration: "none",
                   }}
                 >
-                  {name} {serviceData.shortName}
+                  {name} 샷시교체·설치
                 </Link>
               ))}
             </div>
 
             <div style={{ marginTop: 30 }}>
               <Link
-                href={`/area/${params.city}`}
+                href={`/area/${resolvedParams.city}`}
                 className="btn btn-dark"
               >
                 <MapPin size={17} />
@@ -810,9 +880,9 @@ export default function RegionServicePage({
             </span>
 
             <h2 className="section-title">
-              {location}
+              {searchLocation}
               <br />
-              샷시 교체 견적 상담
+              샷시교체·설치 견적 상담
             </h2>
 
             <p className="section-desc">
