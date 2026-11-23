@@ -4,7 +4,9 @@ import Link from "next/link";
 import { ArrowRight, MapPin, Phone } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "부산·울산·창원 샷시 시공 지역 안내",
+  title: {
+    absolute: "부산·울산·창원 샷시 교체 지역 | 구·군별 창호 시공 안내 - 그집창호",
+  },
   description:
     "그집창호 부산, 울산, 창원 아파트·단독주택·빌라 샷시 교체 및 설치 지역별 안내. 구·군별 시공 정보를 확인하고 견적을 상담하세요.",
   alternates: {

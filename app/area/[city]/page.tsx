@@ -137,7 +137,9 @@ export function generateMetadata({
     `그집창호 상담 ${PHONE}.`;
 
   return {
-    title: `${city.name} 샷시 교체·설치 | 지역별 창호 안내`,
+    title: {
+      absolute: `${city.name} 샷시 교체 | ${city.fullName} 아파트·빌라·단독주택 창호 교체 - 그집창호`,
+    },
     description,
     keywords: [
       `${city.name} 샷시`,
@@ -393,8 +395,8 @@ export default function CityPage({
                   }}
                 >
                   <Link
-                    href={`/area/${params.city}/${slug}/apartment`}
-                    aria-label={`${city.name} ${name} 아파트 샷시 교체 안내`}
+                    href={`/area/${params.city}/${slug}`}
+                    aria-label={`${city.name} ${name} 샷시 교체 안내`}
                   >
                     <div
                       style={{

@@ -1,46 +1,8 @@
-
 import type { MetadataRoute } from "next";
-
-const SITE = "https://geujipwindow.com";
-
-const regions: Record<string, string[]> = {
-  busan: [
-    "haeundae",
-    "suyeong",
-    "nam",
-    "dongnae",
-    "yeonje",
-    "busanjin",
-    "dong",
-    "seo",
-    "jung",
-    "yeongdo",
-    "buk",
-    "sasang",
-    "saha",
-    "geumjeong",
-    "gangseo",
-    "gijang",
-  ],
-  ulsan: [
-    "nam",
-    "jung",
-    "dong",
-    "buk",
-    "ulju",
-  ],
-  changwon: [
-    "uichang",
-    "seongsan",
-    "masanhappo",
-    "masanhoewon",
-    "jinhae",
-  ],
-};
-
-const services = ["apartment", "house", "villa"];
+import { SITE, regions, SERVICE_KEYS, type CityKey } from "../lib/geujip";
 
 export default function sitemap(): MetadataRoute.Sitemap {
+  const lastModified = new Date();
   const urls: MetadataRoute.Sitemap = [];
 
   const add = (
@@ -50,6 +12,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   ) => {
     urls.push({
       url: `${SITE}${path}`,
+      lastModified,
       changeFrequency: frequency,
       priority,
     });
@@ -59,7 +22,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   add("/", 1, "weekly");
 
   // 시공 서비스 페이지
-  for (const service of services) {
+  for (const service of SERVICE_KEYS) {
     add(`/services/${service}`, 0.9, "monthly");
   }
 
@@ -69,20 +32,17 @@ export default function sitemap(): MetadataRoute.Sitemap {
   // 지역 선택 메인
   add("/area", 0.9, "monthly");
 
-  // 부산·울산·창원 대표 페이지
-  for (const city of Object.keys(regions)) {
-    add(`/area/${city}`, 0.8, "monthly");
-  }
+  for (const city of Object.keys(regions) as CityKey[]) {
+    // 부산·울산·창원 대표 페이지
+    add(`/area/${city}`, 0.85, "monthly");
 
-  // 구·군별 서비스 상세 페이지
-  for (const [city, districts] of Object.entries(regions)) {
-    for (const district of districts) {
-      for (const service of services) {
-        add(
-          `/area/${city}/${district}/${service}`,
-          0.7,
-          "monthly"
-        );
+    for (const district of Object.keys(regions[city].districts)) {
+      // 구·군 대표 페이지 (해운대 샷시 교체 등)
+      add(`/area/${city}/${district}`, 0.8, "monthly");
+
+      // 구·군별 건물 유형 페이지
+      for (const service of SERVICE_KEYS) {
+        add(`/area/${city}/${district}/${service}`, 0.7, "monthly");
       }
     }
   }

@@ -101,8 +101,10 @@ export function generateMetadata({
   const url = `${SITE}/services/${params.type}`;
 
   return {
-    title: service.title,
-    description: service.description,
+    title: {
+      absolute: `부산·울산·창원 ${service.keyword} 전문 | ${service.title} - 그집창호`,
+    },
+    description: `${service.description} 부산·울산·창원 구·군별 현장 실측 상담 ☎ 010-8176-3350`,
     keywords: [
       service.keyword,
       service.title,

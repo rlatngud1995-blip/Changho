@@ -11,7 +11,7 @@ const DESCRIPTION =
 
 export const metadata: Metadata = {
   title: {
-    absolute: "그집창호 | 부산·울산·창원 샷시 교체",
+    absolute: "샷시 교체 그집창호 | 부산·울산·창원 아파트·빌라·주택 창호 교체",
   },
   description: DESCRIPTION,
   alternates: {
@@ -25,7 +25,7 @@ export const metadata: Metadata = {
     type: "website",
     locale: "ko_KR",
     siteName: "그집창호",
-    title: "그집창호 | 부산·울산·창원 샷시 교체",
+    title: "샷시 교체 그집창호 | 부산·울산·창원 아파트·빌라·주택 창호 교체",
     description: DESCRIPTION,
     url: SITE,
     images: [

@@ -2,6 +2,7 @@
 import type { Metadata, Viewport } from "next";
 import SiteHeader from "../components/SiteHeader";
 import "./globals.css";
+import { businessSchema, jsonLd } from "../lib/geujip";
 
 const SITE_URL = "https://geujipwindow.com";
 
@@ -17,7 +18,7 @@ export const metadata: Metadata = {
   applicationName: "그집창호",
 
   title: {
-    default: "그집창호 | 부산·울산·창원 샷시 교체",
+    default: "샷시 교체 그집창호 | 부산·울산·창원 아파트·빌라·주택 창호 교체",
     template: "%s | 그집창호",
   },
 
@@ -102,6 +103,12 @@ export default function RootLayout({
       </head>
 
       <body>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={jsonLd(
+            businessSchema(["부산광역시", "울산광역시", "경상남도 창원시"])
+          )}
+        />
         <SiteHeader />
         {children}
       </body>
