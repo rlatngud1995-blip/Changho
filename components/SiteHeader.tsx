@@ -57,8 +57,8 @@ export default function SiteHeader() {
             className="logo"
             onClick={closeMenu}
           >
-            그집창호
-            <span>GEUJIP WINDOW</span>
+            창호의민족
+            <span>CHANGHO MINJOK</span>
           </Link>
 
           <div
@@ -69,14 +69,14 @@ export default function SiteHeader() {
             }}
           >
             <a
-              href="tel:01081763350"
+              href="tel:01094134686"
               className="header-contact"
             >
               <Phone
                 size={15}
                 style={{ marginRight: 7 }}
               />
-              010-8176-3350
+              010-9413-4686
             </a>
 
             <button
@@ -141,7 +141,7 @@ export default function SiteHeader() {
                   marginBottom: 22,
                 }}
               >
-                GEUJIP WINDOW / MENU
+                CHANGHO MINJOK / MENU
               </p>
 
               <Link
@@ -245,7 +245,7 @@ export default function SiteHeader() {
               )}
 
               <a
-                href="tel:01081763350"
+                href="tel:01094134686"
                 className="btn btn-dark"
                 style={{
                   display: "flex",

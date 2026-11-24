@@ -10,14 +10,14 @@ import {
 export const metadata: Metadata = {
   title: "샷시 시공과정",
   description:
-    "그집창호 샷시 교체 및 설치 과정. 상담, 현장 확인, 정밀 실측, 창호 사양 선정, 견적, 시공, 최종 점검까지 8단계로 안내합니다.",
+    "창호의민족 샷시 교체 및 설치 과정. 상담, 현장 확인, 정밀 실측, 창호 사양 선정, 견적, 시공, 최종 점검까지 8단계로 안내합니다.",
   alternates: {
     canonical: "/process",
   },
 };
 
-const PHONE = "010-8176-3350";
-const TEL = "tel:01081763350";
+const PHONE = "010-9413-4686";
+const TEL = "tel:01094134686";
 
 const steps = [
   {
@@ -137,7 +137,7 @@ export default function ProcessPage() {
               className="eyebrow"
               style={{ marginTop: 38 }}
             >
-              GEUJIP WINDOW / INSTALLATION PROCESS
+              CHANGHO MINJOK / INSTALLATION PROCESS
             </span>
 
             <h1 className="section-title">
@@ -155,7 +155,7 @@ export default function ProcessPage() {
             >
               정확한 실측과 현장 조건에 맞는 시공은
               좋은 창호의 기본입니다.
-              그집창호의 8단계 창호 시공과정을 확인해 보세요.
+              창호의민족의 8단계 창호 시공과정을 확인해 보세요.
             </p>
           </div>
         </section>
@@ -321,8 +321,8 @@ export default function ProcessPage() {
           <div className="footer-grid">
             <div>
               <div className="logo">
-                그집창호
-                <span>GEUJIP WINDOW</span>
+                창호의민족
+                <span>CHANGHO MINJOK</span>
               </div>
 
               <p>
@@ -333,7 +333,7 @@ export default function ProcessPage() {
             </div>
 
             <div>
-              <p>견적 및 시공 상담</p>
+              <p>대표 김수형 · 견적 및 시공 상담</p>
 
               <a
                 href={TEL}
@@ -348,7 +348,7 @@ export default function ProcessPage() {
           </div>
 
           <div className="footer-bottom">
-            © {new Date().getFullYear()} GEUJIP WINDOW.
+            © {new Date().getFullYear()} CHANGHO MINJOK.
             All Rights Reserved.
           </div>
         </div>

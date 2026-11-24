@@ -11,8 +11,8 @@ import {
 } from "lucide-react";
 
 const SITE = "https://geujipwindow.com";
-const PHONE = "010-8176-3350";
-const TEL = "tel:01081763350";
+const PHONE = "010-9413-4686";
+const TEL = "tel:01094134686";
 
 const cities = {
   busan: {
@@ -134,11 +134,11 @@ export function generateMetadata({
     `${city.name} 샷시 교체·설치 안내. ` +
     `아파트 베란다 샷시, 단독주택 창호, ` +
     `빌라 창문 교체 정보를 확인하세요. ` +
-    `그집창호 상담 ${PHONE}.`;
+    `창호의민족 상담 ${PHONE}.`;
 
   return {
     title: {
-      absolute: `${city.name} 샷시 교체 | ${city.fullName} 아파트·빌라·단독주택 창호 교체 - 그집창호`,
+      absolute: `${city.name} 샷시 교체 | ${city.fullName} 아파트·빌라·단독주택 창호 교체 - 창호의민족`,
     },
     description,
     alternates: {
@@ -147,8 +147,8 @@ export function generateMetadata({
     openGraph: {
       type: "website",
       locale: "ko_KR",
-      siteName: "그집창호",
-      title: `${city.name} 샷시 교체·설치 | 그집창호`,
+      siteName: "창호의민족",
+      title: `${city.name} 샷시 교체·설치 | 창호의민족`,
       description,
       url,
       images: [
@@ -217,7 +217,7 @@ export default function CityPage({
           }}
         >
           <p className="hero-kicker">
-            GEUJIP WINDOW / SERVICE AREA
+            CHANGHO MINJOK / SERVICE AREA
           </p>
 
           <h1
@@ -267,7 +267,7 @@ export default function CityPage({
           <h2 className="section-title">
             {city.name} 창호 교체
             <br />
-            그집창호에서 상담하세요.
+            창호의민족에서 상담하세요.
           </h2>
 
           <p className="section-desc">

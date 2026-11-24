@@ -32,6 +32,7 @@ import {
   type CityKey,
   type ServiceKey,
 } from "../../../../../lib/geujip";
+import { serviceCopy, nearSlice } from "../../../../../lib/copy";
 
 type PageParams = {
   city: string;
@@ -53,20 +54,19 @@ function getPageData(params: PageParams) {
   const serviceData = services[params.service as ServiceKey];
   const search = searchName(params.city, districtName);
   const official = officialName(params.city, districtName);
+  const full = fullName(params.city, districtName);
+  const copy = serviceCopy(`${params.city}/${params.district}/${params.service}`, search, full, official, serviceData);
 
   return {
+    copy,
     cityData,
     districtName,
     serviceData,
     search,
     official,
-    full: fullName(params.city, districtName),
-    /* 예) 해운대 아파트 샷시 교체 | 부산 해운대구 베란다·거실창 창호 교체 - 그집창호 */
-    title: `${search} ${serviceData.keyword} | ${fullName(params.city, districtName)} ${serviceData.tail} - ${COMPANY}`,
-    description:
-      `${official} ${serviceData.name} ${COMPANY}. ` +
-      `${serviceData.items[0].title}, ${serviceData.items[1].title}, ${serviceData.items[2].title}까지 ` +
-      `현장 실측 후 견적을 안내합니다. ☎ ${PHONE}`,
+    full,
+    title: copy.title,
+    description: copy.description,
   };
 }
 
@@ -167,13 +167,7 @@ export default async function RegionServicePage({
   const searchLocation = data.search;
   const local = localParagraphs(resolvedParams.city, resolvedParams.district, districtName);
 
-  const faqs = [
-    ...serviceData.faq,
-    {
-      q: `${searchLocation} 샷시 교체 출장 실측이 가능한가요?`,
-      a: `네, ${official} 현장 실측 상담이 가능합니다. 주소와 교체할 창 사진을 보내주시면 일정을 안내해드립니다.`,
-    },
-  ];
+  const faqs = data.copy.faqs;
 
   const currentUrl =
     `${SITE}/area/${resolvedParams.city}/` +
@@ -200,9 +194,11 @@ export default async function RegionServicePage({
     ([key]) => key !== resolvedParams.service
   );
 
-  const districtLinks = Object.entries(
-    cityData.districts
-  ).filter(([key]) => key !== resolvedParams.district);
+  const districtLinks = nearSlice(
+    Object.entries(cityData.districts).filter(([key]) => key !== resolvedParams.district),
+    Object.keys(cityData.districts).indexOf(resolvedParams.district),
+    6
+  );
 
   return (
     <>
@@ -280,7 +276,7 @@ export default async function RegionServicePage({
             }}
           >
             <p className="hero-kicker">
-              GEUJIP WINDOW / LOCAL SERVICE
+              CHANGHO MINJOK / LOCAL SERVICE
             </p>
 
             <h1
@@ -327,27 +323,16 @@ export default async function RegionServicePage({
             </span>
 
             <h2 className="section-title">
-              {searchLocation} 샷시교체·설치
+              {searchLocation} {serviceData.shortName}
               <br />
-              {serviceData.shortName} 안내
+              {data.copy.introTitle}
             </h2>
 
-            <p className="section-desc">
-              {location}에서 {serviceData.name}을
-              계획하고 계신가요?
-              창호 교체는 건물 구조, 창문 크기,
-              기존 창틀 상태와 설치 환경에 따라
-              시공 방법이 달라질 수 있습니다.
-            </p>
-
-            <p className="section-desc">
-              그집창호는 상담을 통해
-              기존 창호 상태와 교체 범위를 확인하고
-              현장 조건에 맞는 설치 방법과
-              견적을 안내합니다.
-              출장 가능 여부와 일정은
-              상담 시 확인해 주세요.
-            </p>
+            {data.copy.intro.map((text) => (
+              <p className="section-desc" key={text}>
+                {text}
+              </p>
+            ))}
 
             <div className="features-grid">
               {serviceData.items.map((item, index) => (
@@ -373,7 +358,7 @@ export default async function RegionServicePage({
             <h2 className="section-title">
               {serviceData.shortName}
               <br />
-              창호 사진 갤러리
+              {data.copy.galleryTitle}
             </h2>
 
             <p className="section-desc">
@@ -559,7 +544,7 @@ export default async function RegionServicePage({
             <h2 className="section-title">
               {serviceData.shortName}
               <br />
-              시공 진행 절차
+              {data.copy.processTitle}
             </h2>
 
             <div
@@ -622,6 +607,13 @@ export default async function RegionServicePage({
                 {text}
               </p>
             ))}
+
+            <h3 style={{ marginTop: 34, fontSize: 20 }}>{data.copy.tipsTitle}</h3>
+            <ul style={{ marginTop: 14, paddingLeft: 20, lineHeight: 1.9, color: "#3d4954" }}>
+              {data.copy.tips.map((tip) => (
+                <li key={tip}>{tip}</li>
+              ))}
+            </ul>
           </div>
         </section>
 
@@ -668,7 +660,7 @@ export default async function RegionServicePage({
             <h2 className="section-title">
               {location}
               <br />
-              다른 창호 서비스
+              {data.copy.relatedTitle}
             </h2>
 
             <div
@@ -775,16 +767,12 @@ export default async function RegionServicePage({
             </span>
 
             <h2 className="section-title">
-              {searchLocation}
+              {searchLocation} {serviceData.shortName}
               <br />
-              샷시교체·설치 견적 상담
+              {data.copy.contactTitle}
             </h2>
 
-            <p className="section-desc">
-              창호 규격과 자재 사양,
-              철거 범위, 현장 조건에 따라
-              견적이 달라질 수 있습니다.
-            </p>
+            <p className="section-desc">{data.copy.contactText}</p>
 
             <a
               href={TEL}
@@ -809,8 +797,8 @@ export default async function RegionServicePage({
           <div className="footer-grid">
             <div>
               <div className="logo">
-                그집창호
-                <span>GEUJIP WINDOW</span>
+                창호의민족
+                <span>CHANGHO MINJOK</span>
               </div>
 
               <p>
@@ -821,13 +809,13 @@ export default async function RegionServicePage({
             </div>
 
             <div>
-              <p>견적 및 시공 상담</p>
+              <p>대표 김수형 · 견적 및 시공 상담</p>
               <a href={TEL}>{PHONE}</a>
             </div>
           </div>
 
           <div className="footer-bottom">
-            © {new Date().getFullYear()} GEUJIP WINDOW.
+            © {new Date().getFullYear()} CHANGHO MINJOK.
             All Rights Reserved.
           </div>
         </div>

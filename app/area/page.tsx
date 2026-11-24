@@ -5,10 +5,10 @@ import { ArrowRight, MapPin, Phone } from "lucide-react";
 
 export const metadata: Metadata = {
   title: {
-    absolute: "부산·울산·창원 샷시 교체 지역 | 구·군별 창호 시공 안내 - 그집창호",
+    absolute: "부산·울산·창원 샷시 교체 지역 | 구·군별 창호 시공 안내 - 창호의민족",
   },
   description:
-    "그집창호 부산, 울산, 창원 아파트·단독주택·빌라 샷시 교체 및 설치 지역별 안내. 구·군별 시공 정보를 확인하고 견적을 상담하세요.",
+    "창호의민족 부산, 울산, 창원 아파트·단독주택·빌라 샷시 교체 및 설치 지역별 안내. 구·군별 시공 정보를 확인하고 견적을 상담하세요.",
   alternates: {
     canonical: "/area",
   },
@@ -55,7 +55,7 @@ export default function AreaPage() {
         >
           <div className="container">
             <span className="eyebrow">
-              GEUJIP WINDOW / SERVICE AREA
+              CHANGHO MINJOK / SERVICE AREA
             </span>
 
             <h1
@@ -84,7 +84,7 @@ export default function AreaPage() {
             </p>
 
             <a
-              href="tel:01081763350"
+              href="tel:01094134686"
               className="btn btn-white"
               style={{ marginTop: 30, gap: 10 }}
             >
@@ -219,12 +219,12 @@ export default function AreaPage() {
             </p>
 
             <a
-              href="tel:01081763350"
+              href="tel:01094134686"
               className="btn btn-dark"
               style={{ marginTop: 25, gap: 10 }}
             >
               <Phone size={17} />
-              010-8176-3350
+              010-9413-4686
             </a>
           </div>
         </section>
@@ -235,8 +235,8 @@ export default function AreaPage() {
           <div className="footer-grid">
             <div>
               <div className="logo">
-                그집창호
-                <span>GEUJIP WINDOW</span>
+                창호의민족
+                <span>CHANGHO MINJOK</span>
               </div>
               <p>
                 아파트 · 단독주택 · 빌라
@@ -245,22 +245,22 @@ export default function AreaPage() {
               </p>
             </div>
             <div>
-              <p>견적 및 시공 상담</p>
-              <a href="tel:01081763350">
-                010-8176-3350
+              <p>대표 김수형 · 견적 및 시공 상담</p>
+              <a href="tel:01094134686">
+                010-9413-4686
               </a>
             </div>
           </div>
 
           <div className="footer-bottom">
-            © {new Date().getFullYear()} GEUJIP WINDOW.
+            © {new Date().getFullYear()} CHANGHO MINJOK.
           </div>
         </div>
       </footer>
 
       <div className="mobile-call">
-        <a href="tel:01081763350">
-          ☎ 전화 상담 · 010-8176-3350
+        <a href="tel:01094134686">
+          ☎ 전화 상담 · 010-9413-4686
         </a>
       </div>
     </>

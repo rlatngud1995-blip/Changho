@@ -6,65 +6,62 @@ import { businessSchema, jsonLd } from "../lib/geujip";
 
 const SITE_URL = "https://geujipwindow.com";
 
-const FAVICON =
-  "/8E8F15BB-A6AB-4A47-AF39-8DE4D6259BBF.png";
 
 const SITE_DESCRIPTION =
-  "부산·울산·창원 샷시 교체 전문 그집창호. 아파트·단독주택·빌라 창호 설치, 현장 실측 및 견적 상담 안내.";
+  "부산·울산·창원 샷시 교체 전문 창호의민족. 아파트·단독주택·빌라 창호 설치, 현장 실측 및 견적 상담 안내.";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
 
-  applicationName: "그집창호",
+  applicationName: "창호의민족",
 
   title: {
-    default: "샷시 교체 그집창호 | 부산·울산·창원 아파트·빌라·주택 창호 교체",
-    template: "%s | 그집창호",
+    default: "샷시 교체 창호의민족 | 부산·울산·창원 아파트·빌라·주택 창호 교체",
+    template: "%s | 창호의민족",
   },
 
   description: SITE_DESCRIPTION,
 
   icons: {
     icon: [
-      {
-        url: FAVICON,
-        type: "image/png",
-        sizes: "any",
-      },
+      { url: "/favicon.ico", sizes: "48x48" },
+      { url: "/icon-192.png", type: "image/png", sizes: "192x192" },
     ],
-    shortcut: FAVICON,
-    apple: [
-      {
-        url: FAVICON,
-        sizes: "180x180",
-        type: "image/png",
-      },
-    ],
+    shortcut: "/favicon.ico",
+    apple: [{ url: "/apple-touch-icon.png", sizes: "180x180", type: "image/png" }],
+  },
+
+  alternates: {
+    types: { "application/rss+xml": `${SITE_URL}/rss.xml` },
   },
 
   robots: {
     index: true,
     follow: true,
+    googleBot: { index: true, follow: true, "max-image-preview": "large", "max-snippet": -1 },
   },
+
+  authors: [{ name: "창호의민족 (대표 김수형)" }],
+  formatDetection: { telephone: true },
 
   openGraph: {
     type: "website",
     locale: "ko_KR",
-    siteName: "그집창호",
-    title: "그집창호 | 부산·울산·창원 샷시 교체",
+    siteName: "창호의민족",
+    title: "창호의민족 | 부산·울산·창원 샷시 교체",
     description: SITE_DESCRIPTION,
     url: SITE_URL,
     images: [
       {
         url: "/IMG_1944.jpeg",
-        alt: "그집창호 샷시 및 창호 설치",
+        alt: "창호의민족 샷시 및 창호 설치",
       },
     ],
   },
 
   twitter: {
     card: "summary_large_image",
-    title: "그집창호 | 부산·울산·창원 샷시 교체",
+    title: "창호의민족 | 부산·울산·창원 샷시 교체",
     description: SITE_DESCRIPTION,
     images: ["/IMG_1944.jpeg"],
   },

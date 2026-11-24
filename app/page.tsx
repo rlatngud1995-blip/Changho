@@ -4,14 +4,14 @@ import Image from "next/image";
 import Link from "next/link";
 
 const SITE = "https://geujipwindow.com";
-const PHONE = "010-8176-3350";
+const PHONE = "010-9413-4686";
 
 const DESCRIPTION =
-  "부산·울산·창원 샷시 교체 전문 그집창호. 아파트·단독주택·빌라 창호 설치, 현장 실측 및 견적 상담 안내.";
+  "부산·울산·창원 샷시 교체 전문 창호의민족. 아파트·단독주택·빌라 창호 설치, 현장 실측 및 견적 상담 안내.";
 
 export const metadata: Metadata = {
   title: {
-    absolute: "샷시 교체 그집창호 | 부산·울산·창원 아파트·빌라·주택 창호 교체",
+    absolute: "샷시 교체 창호의민족 | 부산·울산·창원 아파트·빌라·주택 창호 교체",
   },
   description: DESCRIPTION,
   alternates: {
@@ -24,8 +24,8 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     locale: "ko_KR",
-    siteName: "그집창호",
-    title: "샷시 교체 그집창호 | 부산·울산·창원 아파트·빌라·주택 창호 교체",
+    siteName: "창호의민족",
+    title: "샷시 교체 창호의민족 | 부산·울산·창원 아파트·빌라·주택 창호 교체",
     description: DESCRIPTION,
     url: SITE,
     images: [
@@ -33,7 +33,7 @@ export const metadata: Metadata = {
         url: `${SITE}/IMG_1944.jpeg`,
         width: 1200,
         height: 630,
-        alt: "그집창호 샷시 교체 및 창호 설치",
+        alt: "창호의민족 샷시 교체 및 창호 설치",
       },
     ],
   },
@@ -101,9 +101,11 @@ export default function HomePage() {
   const structuredData = {
     "@context": "https://schema.org",
     "@type": "HomeAndConstructionBusiness",
-    name: "그집창호",
+    "@id": `${SITE}/#business`,
+    name: "창호의민족",
+    founder: { "@type": "Person", name: "김수형" },
     url: SITE,
-    telephone: PHONE,
+    telephone: "+82-10-9413-4686",
     description: DESCRIPTION,
     areaServed: [
       { "@type": "AdministrativeArea", name: "부산광역시" },
@@ -136,7 +138,7 @@ export default function HomePage() {
       >
         <Image
           src="/IMG_1944.jpeg"
-          alt="그집창호 창호 시공 참고 이미지"
+          alt="창호의민족 창호 시공 참고 이미지"
           fill
           priority
           sizes="100vw"
@@ -163,7 +165,7 @@ export default function HomePage() {
               color: "#ddd",
             }}
           >
-            GEUJIP WINDOW
+            CHANGHO MINJOK
           </p>
 
           <h1
@@ -177,7 +179,7 @@ export default function HomePage() {
           >
             공간을 바꾸는 창,
             <br />
-            그집창호
+            창호의민족
           </h1>
 
           <p
@@ -235,7 +237,7 @@ export default function HomePage() {
 
       <section className="section">
         <div className="container">
-          <p className="eyebrow">ABOUT GEUJIP WINDOW</p>
+          <p className="eyebrow">ABOUT CHANGHO MINJOK</p>
 
           <h2 className="section-title">
             창호 교체,
@@ -250,7 +252,7 @@ export default function HomePage() {
               lineHeight: 2,
             }}
           >
-            그집창호는 부산·울산·창원 지역의 아파트,
+            창호의민족은 부산·울산·창원 지역의 아파트,
             단독주택, 빌라 샷시 교체 및 설치 상담을
             안내합니다. 창문의 크기와 현장 상태,
             설치 환경을 확인하여 필요한 시공 내용을
@@ -609,10 +611,10 @@ export default function HomePage() {
           lineHeight: 2,
         }}
       >
-        <p>그집창호 · GEUJIP WINDOW</p>
+        <p>창호의민족 · CHANGHO MINJOK</p>
         <p>부산 · 울산 · 창원 샷시 교체 및 창호 설치</p>
-        <p>상담전화 {PHONE}</p>
-        <p>© {new Date().getFullYear()} GEUJIP WINDOW.</p>
+        <p>대표 김수형 · 상담전화 {PHONE}</p>
+        <p>© {new Date().getFullYear()} CHANGHO MINJOK.</p>
       </footer>
 
       <script

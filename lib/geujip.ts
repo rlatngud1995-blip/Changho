@@ -1,12 +1,13 @@
 /* =====================================
-   그집창호 공통 데이터 · SEO
+   창호의민족 공통 데이터 · SEO (대표 김수형)
    - 모든 페이지가 이 파일 하나를 함께 씁니다.
 ===================================== */
 
 export const SITE = "https://geujipwindow.com";
-export const COMPANY = "그집창호";
-export const PHONE = "010-8176-3350";
-export const TEL = "tel:01081763350";
+export const COMPANY = "창호의민족";
+export const CEO = "김수형";
+export const PHONE = "010-9413-4686";
+export const TEL = "tel:01094134686";
 export const MAIN_IMAGE = "/IMG_1944.jpeg";
 
 export const regions = {
@@ -354,12 +355,15 @@ export function businessSchema(areaServed: string[]) {
     "@type": "HomeAndConstructionBusiness",
     "@id": `${SITE}/#business`,
     name: COMPANY,
+    alternateName: "CHANGHO MINJOK",
+    founder: { "@type": "Person", name: CEO },
     url: SITE,
     telephone: `+82-${PHONE.slice(1)}`,
     image: `${SITE}${MAIN_IMAGE}`,
     logo: `${SITE}/8E8F15BB-A6AB-4A47-AF39-8DE4D6259BBF.png`,
     priceRange: "현장 실측 견적",
-    description: "부산·울산·창원 아파트·단독주택·빌라 샷시 교체 및 창호 설치",
+    description: "부산·울산·창원 아파트·단독주택·빌라 샷시 교체 및 창호 설치 전문 창호의민족 (대표 김수형)",
+    knowsAbout: ["샷시 교체", "창호 교체", "베란다 샷시", "이중창", "단열 창호", "방음 창호"],
     areaServed: areaServed.map((name) => ({
       "@type": "AdministrativeArea",
       name,

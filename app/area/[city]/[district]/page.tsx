@@ -27,6 +27,7 @@ import {
   jsonLd,
   type CityKey,
 } from "../../../../lib/geujip";
+import { districtCopy, nearSlice } from "../../../../lib/copy";
 
 /* =====================================
    구·군 대표 페이지
@@ -55,6 +56,7 @@ function getData(params: PageParams) {
   const search = searchName(params.city, districtName);
   const full = fullName(params.city, districtName);
   const official = officialName(params.city, districtName);
+  const copy = districtCopy(`${params.city}/${params.district}`, search, full, official);
 
   return {
     districtName,
@@ -63,10 +65,9 @@ function getData(params: PageParams) {
     official,
     cityData: regions[params.city as CityKey],
     url: `${SITE}${areaUrl(params.city, params.district)}`,
-    title: `${search} 샷시 교체 | ${full} 아파트·빌라·단독주택 창호 교체 - ${COMPANY}`,
-    description:
-      `${official} 샷시 교체·창호 설치 ${COMPANY}. 아파트 베란다·거실창, 빌라 베란다 샷시, ` +
-      `단독주택 전체 창호 교체까지 현장 실측 후 견적을 안내합니다. ☎ ${PHONE}`,
+    copy,
+    title: copy.title,
+    description: copy.description,
   };
 }
 
@@ -110,20 +111,8 @@ export default async function DistrictPage({ params }: PageProps) {
   const local = localParagraphs(city, district, districtName);
   const nearby = nearbyDistricts(city, district);
 
-  const faqs = [
-    {
-      q: `${search} 샷시 교체 실측 출장이 가능한가요?`,
-      a: `네, ${official} 현장 실측 상담이 가능합니다. 주소와 교체할 창 사진을 보내주시면 방문 일정을 안내해드립니다.`,
-    },
-    {
-      q: `${search} 샷시 교체 견적은 어떻게 정해지나요?`,
-      a: "창 개수와 크기, 창호 제품·유리 사양, 기존 샷시 철거 범위, 층수와 자재 운반 방법에 따라 달라집니다. 실측 후 항목별로 안내해드립니다.",
-    },
-    {
-      q: "샷시 교체하면 결로와 외풍이 줄어드나요?",
-      a: "단열 성능이 좋은 창호와 유리로 바꾸면 외풍과 결로를 줄이는 데 도움이 됩니다. 다만 환기 습관과 벽체 상태에 따라 차이가 있어, 현장을 보고 함께 안내해드립니다.",
-    },
-  ];
+  const faqs = data.copy.faqs;
+  const nearList = nearSlice(nearby, Object.keys(cityData.districts).indexOf(district), 6);
 
   return (
     <>
@@ -171,7 +160,7 @@ export default async function DistrictPage({ params }: PageProps) {
           />
 
           <div className="container" style={{ position: "relative", zIndex: 1 }}>
-            <p className="hero-kicker">GEUJIP WINDOW / {cityData.name}</p>
+            <p className="hero-kicker">CHANGHO MINJOK / {cityData.name}</p>
 
             <h1
               style={{
@@ -182,12 +171,11 @@ export default async function DistrictPage({ params }: PageProps) {
             >
               {full}
               <br />
-              샷시 교체 · 창호 설치
+              {data.copy.h1b}
             </h1>
 
             <p style={{ maxWidth: 620, lineHeight: 1.7, opacity: 0.92 }}>
-              {official} 아파트 베란다·거실창, 빌라 베란다 샷시, 단독주택 전체
-              창호 교체를 현장 실측 후 안내합니다.
+              {data.copy.lead}
             </p>
 
             <a href={TEL} className="btn btn-white" style={{ marginTop: 28 }}>
@@ -205,7 +193,7 @@ export default async function DistrictPage({ params }: PageProps) {
             <h2 className="section-title">
               {search} 샷시 교체
               <br />
-              건물 유형별 안내
+              {data.copy.servicesTitle}
             </h2>
 
             <div
@@ -272,7 +260,7 @@ export default async function DistrictPage({ params }: PageProps) {
             <h2 className="section-title">
               {full}
               <br />
-              창호 현장 특징
+              {data.copy.localTitle}
             </h2>
 
             {local.map((text) => (
@@ -280,6 +268,13 @@ export default async function DistrictPage({ params }: PageProps) {
                 {text}
               </p>
             ))}
+
+            <h3 style={{ marginTop: 34, fontSize: 20 }}>{data.copy.tipsTitle}</h3>
+            <ul style={{ marginTop: 14, paddingLeft: 20, lineHeight: 1.9, color: "#3d4954" }}>
+              {data.copy.tips.map((tip) => (
+                <li key={tip}>{tip}</li>
+              ))}
+            </ul>
           </div>
         </section>
 
@@ -328,7 +323,7 @@ export default async function DistrictPage({ params }: PageProps) {
             </h2>
 
             <div style={{ display: "flex", flexWrap: "wrap", gap: 10, marginTop: 25 }}>
-              {nearby.map((item) => (
+              {nearList.map((item) => (
                 <Link
                   key={item.slug}
                   href={areaUrl(city, item.slug)}
@@ -363,13 +358,10 @@ export default async function DistrictPage({ params }: PageProps) {
             <h2 className="section-title">
               {search} 샷시 교체
               <br />
-              견적 상담
+              {data.copy.contactTitle}
             </h2>
 
-            <p className="section-desc">
-              교체할 창 사진과 주소를 보내주시면 실측 일정과 예상 견적을
-              안내해드립니다.
-            </p>
+            <p className="section-desc">{data.copy.contactText}</p>
 
             <a href={TEL} className="btn btn-dark" style={{ marginTop: 25 }}>
               <Phone size={17} />
@@ -384,8 +376,8 @@ export default async function DistrictPage({ params }: PageProps) {
           <div className="footer-grid">
             <div>
               <div className="logo">
-                그집창호
-                <span>GEUJIP WINDOW</span>
+                창호의민족
+                <span>CHANGHO MINJOK</span>
               </div>
               <p>
                 {official}
@@ -394,12 +386,12 @@ export default async function DistrictPage({ params }: PageProps) {
               </p>
             </div>
             <div>
-              <p>견적 및 시공 상담</p>
+              <p>대표 김수형 · 견적 및 시공 상담</p>
               <a href={TEL}>{PHONE}</a>
             </div>
           </div>
           <div className="footer-bottom">
-            © {new Date().getFullYear()} GEUJIP WINDOW. All Rights Reserved.
+            © {new Date().getFullYear()} CHANGHO MINJOK. All Rights Reserved.
           </div>
         </div>
       </footer>

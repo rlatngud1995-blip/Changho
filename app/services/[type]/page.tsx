@@ -10,8 +10,8 @@ import {
 } from "lucide-react";
 
 const SITE = "https://geujipwindow.com";
-const PHONE = "010-8176-3350";
-const TEL = "tel:01081763350";
+const PHONE = "010-9413-4686";
+const TEL = "tel:01094134686";
 
 const services = {
   apartment: {
@@ -102,16 +102,16 @@ export function generateMetadata({
 
   return {
     title: {
-      absolute: `부산·울산·창원 ${service.keyword} 전문 | ${service.title} - 그집창호`,
+      absolute: `부산·울산·창원 ${service.keyword} 전문 | ${service.title} - 창호의민족`,
     },
-    description: `${service.description} 부산·울산·창원 구·군별 현장 실측 상담 ☎ 010-8176-3350`,
+    description: `${service.description} 부산·울산·창원 구·군별 현장 실측 상담 ☎ 010-9413-4686`,
     alternates: {
       canonical: url,
     },
     openGraph: {
       type: "website",
       locale: "ko_KR",
-      title: `${service.title} | 그집창호`,
+      title: `${service.title} | 창호의민족`,
       description: service.description,
       url,
       images: [
@@ -156,7 +156,7 @@ export default function ServicePage({
     serviceType: service.title,
     provider: {
       "@type": "Organization",
-      name: "그집창호",
+      name: "창호의민족",
       url: SITE,
       telephone: PHONE,
     },
@@ -215,7 +215,7 @@ export default function ServicePage({
             }}
           >
             <span className="hero-kicker">
-              GEUJIP WINDOW / SERVICE
+              CHANGHO MINJOK / SERVICE
             </span>
 
             <h1
@@ -542,8 +542,8 @@ export default function ServicePage({
           <div className="footer-grid">
             <div>
               <div className="logo">
-                그집창호
-                <span>GEUJIP WINDOW</span>
+                창호의민족
+                <span>CHANGHO MINJOK</span>
               </div>
 
               <p>
@@ -554,13 +554,13 @@ export default function ServicePage({
             </div>
 
             <div>
-              <p>견적 및 시공 상담</p>
+              <p>대표 김수형 · 견적 및 시공 상담</p>
               <a href={TEL}>{PHONE}</a>
             </div>
           </div>
 
           <div className="footer-bottom">
-            © {new Date().getFullYear()} GEUJIP WINDOW.
+            © {new Date().getFullYear()} CHANGHO MINJOK.
             All Rights Reserved.
           </div>
         </div>
