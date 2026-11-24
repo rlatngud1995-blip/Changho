@@ -24,18 +24,6 @@ export const metadata: Metadata = {
 
   description: SITE_DESCRIPTION,
 
-  keywords: [
-    "그집창호",
-    "부산 샷시",
-    "울산 샷시",
-    "창원 샷시",
-    "샷시 교체",
-    "창호 교체",
-    "아파트 샷시 교체",
-    "단독주택 샷시 교체",
-    "빌라 샷시 교체",
-  ],
-
   icons: {
     icon: [
       {

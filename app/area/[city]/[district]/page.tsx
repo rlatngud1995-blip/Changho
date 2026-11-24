@@ -80,14 +80,6 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   return {
     title: { absolute: data.title },
     description: data.description,
-    keywords: [
-      `${data.search} 샷시`,
-      `${data.search} 샷시 교체`,
-      `${data.search} 창호 교체`,
-      `${data.search} 아파트 샷시`,
-      `${data.search} 빌라 샷시`,
-      COMPANY,
-    ],
     alternates: { canonical: data.url },
     openGraph: {
       type: "website",

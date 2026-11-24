@@ -99,7 +99,7 @@ export async function generateMetadata({
     };
   }
 
-  const { title, description, search, full, serviceData } = data;
+  const { title, description, full, serviceData } = data;
 
   const url = `${SITE}${serviceUrl(
     resolvedParams.city,
@@ -110,14 +110,6 @@ export async function generateMetadata({
   return {
     title: { absolute: title },
     description,
-    keywords: [
-      `${search} ${serviceData.keyword}`,
-      `${search} 샷시 교체`,
-      `${search} 샷시`,
-      `${search} 창호 교체`,
-      `${full} 샷시`,
-      COMPANY,
-    ],
     alternates: { canonical: url },
     openGraph: {
       type: "website",

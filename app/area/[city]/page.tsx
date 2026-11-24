@@ -141,15 +141,6 @@ export function generateMetadata({
       absolute: `${city.name} 샷시 교체 | ${city.fullName} 아파트·빌라·단독주택 창호 교체 - 그집창호`,
     },
     description,
-    keywords: [
-      `${city.name} 샷시`,
-      `${city.name} 샷시교체`,
-      `${city.name} 창호교체`,
-      `${city.name} 아파트 샷시`,
-      `${city.name} 단독주택 샷시`,
-      `${city.name} 빌라 샷시`,
-      "그집창호",
-    ],
     alternates: {
       canonical: url,
     },
